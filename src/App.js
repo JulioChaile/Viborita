@@ -1,13 +1,14 @@
 import React from 'react';
-import logo, { ReactComponent } from './logo.svg';
 import './App.css';
 
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cord: 10
+      cord: 10,
+      key: 'right'
     }
+    this.onKeyDownHandle = this.onKeyDownHandle.bind(this)
   }
 
   renderSquare(i) {
@@ -35,20 +36,80 @@ class Game extends React.Component {
   }
 
   tick() {
-    let cord
-    
-    if(this.state.cord + 1 === 15){
-      return alert('perdiste wacho')
-    } else{
+    if((this.state.cord + 1) % 5 === 0 && this.state.key === 'right'){
+      return //alert('perdiste wacho')
+    }
+
+    if(this.state.cord % 5 === 0 && this.state.key === 'left'){
+      return //alert('perdiste wacho')
+    } 
+
+    if(this.state.cord -5 < 0 && this.state.key === 'up'){
+      return //alert('perdiste wacho')
+    } 
+
+    if(this.state.cord + 5 > 24 && this.state.key === 'down'){
+      return //alert('perdiste wacho')
+    } 
+
+    if(this.state.key === 'right') {
      this.setState({
        cord: this.state.cord + 1
      });
+    }
+
+    if(this.state.key === 'left') {
+      this.setState({
+        cord: this.state.cord - 1
+      });
+    }
+
+    if(this.state.key === 'up') {
+      this.setState({
+        cord: this.state.cord - 5
+      });
+    }
+
+    if(this.state.key === 'down') {
+      this.setState({
+        cord: this.state.cord + 5
+      });
+    }
+    
+  }
+
+  onKeyDownHandle(event) {
+    const key = event.key
+    
+    if(key === 'ArrowLeft'){
+      this.setState({
+        key: 'left'
+      })
+    }
+
+    if(key === 'ArrowUp'){
+      this.setState({
+        key: 'up'
+      })
+    }
+
+    if(key === 'ArrowRight'){
+      this.setState({
+        key: 'right'
+      })
+    }
+
+    if(key === 'ArrowDown'){
+      this.setState({
+        key: 'down'
+      })
     }
   }
 
   render() {
     return(
-      <div>
+      <div onKeyDown={this.onKeyDownHandle} tabIndex="0" >
+        <h1>{this.state.key}</h1>
         <div className="board-row">
           {this.renderSquare(0)}
           {this.renderSquare(1)}
