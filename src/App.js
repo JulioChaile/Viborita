@@ -1,11 +1,13 @@
 import React from 'react';
 import './App.css';
 
+
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      cord: 10,
+      coord: [12, 11, 10],
       key: 'right'
     }
     this.onKeyDownHandle = this.onKeyDownHandle.bind(this)
@@ -14,9 +16,12 @@ class Game extends React.Component {
   renderSquare(i) {
     let vib = ''
 
-    if(this.state.cord === i) {
-      vib = '⚫';
+    for(let j = 0; j < this.state.coord.length; j++){
+      if(this.state.coord[j] === i) {
+        vib = '⚫';
+      }
     }
+    
     return(
       <div className="square">
         <h1>{vib}</h1>
@@ -36,70 +41,73 @@ class Game extends React.Component {
   }
 
   tick() {
-    if((this.state.cord + 1) % 5 === 0 && this.state.key === 'right'){
+    let coord = this.state.coord.slice()
+    let mov = coord[0]
+
+    coord.pop()
+
+    if((mov + 1) % 5 === 0 && this.state.key === 'right'){
       return //alert('perdiste wacho')
     }
 
-    if(this.state.cord % 5 === 0 && this.state.key === 'left'){
+    if(mov % 5 === 0 && this.state.key === 'left'){
       return //alert('perdiste wacho')
     } 
 
-    if(this.state.cord -5 < 0 && this.state.key === 'up'){
+    if(mov -5 < 0 && this.state.key === 'up'){
       return //alert('perdiste wacho')
     } 
 
-    if(this.state.cord + 5 > 24 && this.state.key === 'down'){
+    if(mov + 5 > 24 && this.state.key === 'down'){
       return //alert('perdiste wacho')
     } 
 
     if(this.state.key === 'right') {
-     this.setState({
-       cord: this.state.cord + 1
-     });
+      mov += 1
     }
 
     if(this.state.key === 'left') {
-      this.setState({
-        cord: this.state.cord - 1
-      });
+      mov -= 1
     }
 
     if(this.state.key === 'up') {
-      this.setState({
-        cord: this.state.cord - 5
-      });
+      mov -= 5
     }
 
     if(this.state.key === 'down') {
-      this.setState({
-        cord: this.state.cord + 5
-      });
+      mov += 5
     }
+
+    coord.unshift(mov)
+
+    this.setState({
+      coord: coord
+    })
     
   }
 
   onKeyDownHandle(event) {
     const key = event.key
     
-    if(key === 'ArrowLeft'){
+    if(key === 'ArrowLeft' && this.state.key !== 'right'){
       this.setState({
         key: 'left'
       })
     }
 
-    if(key === 'ArrowUp'){
+    if(key === 'ArrowUp' && this.state.key !== 'down'){
       this.setState({
         key: 'up'
       })
     }
 
-    if(key === 'ArrowRight'){
+    if(key === 'ArrowRight' && this.state.key !== 'left'){
       this.setState({
         key: 'right'
       })
     }
 
-    if(key === 'ArrowDown'){
+    if(key === 'ArrowDown' && this.state.key !== 'up'){
       this.setState({
         key: 'down'
       })
