@@ -1,5 +1,7 @@
 import React from 'react';
 import './App.css';
+import {RenderTable} from './components/RenderTable.js'
+import {getRandomInt, movVibo, dirVibo} from './components/functions.js'
 
 class Game extends React.Component {
   constructor(props) {
@@ -11,7 +13,6 @@ class Game extends React.Component {
       score: 0
     }
     this.onKeyDownHandle = this.onKeyDownHandle.bind(this)
-    this.getRandomInt = this.getRandomInt.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.reset = this.reset.bind(this)
   }
@@ -38,8 +39,6 @@ class Game extends React.Component {
       1000     
     );
   }
-
-
   
   reset() {
     clearInterval(this.timerID)
@@ -52,86 +51,29 @@ class Game extends React.Component {
     })
   }
 
-  getRandomInt(coord, mov) {
-    let random
-
-    do {
-      random = Math.floor(Math.random() * (25 - 0))
-    } while (coord.includes(random) || random === mov)
-
-    return random;
-  }
-
-  renderSquare(i) {
-    let vib = ''
-
-    if(this.state.food === i) {
-      vib = '🔴';
-    }
-
- 
-    if(this.state.coord.includes(i)) {
-      vib = '⚫';
-    }
-
-    
-    return(
-      <div className="square">
-        <h1>{vib}</h1>
-      </div>
-    )
-  }
-
   tick() {
     let coord = this.state.coord.slice()
     let food = this.state.food
     let mov = coord[0]
     let score = this.state.score
 
-    if((mov + 1) % 5 === 0 && this.state.key === 'right'){
+    if(
+      (mov + 1) % 5 === 0 && this.state.key === 'right' ||
+      mov % 5 === 0 && this.state.key === 'left' ||
+      mov -5 < 0 && this.state.key === 'up' ||
+      mov + 5 > 24 && this.state.key === 'down'
+    ){
       alert('perdiste wacho')
       this.reset()
       return 
     }
 
-    if(mov % 5 === 0 && this.state.key === 'left'){
-      alert('perdiste wacho')
-      this.reset()
-      return 
-    } 
-
-    if(mov -5 < 0 && this.state.key === 'up'){
-      alert('perdiste wacho')
-      this.reset()
-      return 
-    }
-
-    if(mov + 5 > 24 && this.state.key === 'down'){
-      alert('perdiste wacho')
-      this.reset()
-      return
-    } 
-
-    if(this.state.key === 'right') {
-      mov += 1
-    }
-
-    if(this.state.key === 'left') {
-      mov -= 1
-    }
-
-    if(this.state.key === 'up') {
-      mov -= 5
-    }
-
-    if(this.state.key === 'down') {
-      mov += 5
-    }
+    mov = movVibo(this.state.key, mov)
     
     if(mov !== food){
       coord.pop()
     } else {
-      food = this.getRandomInt(coord, mov)
+      food = getRandomInt(coord, mov)
       score += 10
     }
 
@@ -162,76 +104,33 @@ class Game extends React.Component {
 
     const key = event.key
     
-    if(key === 'ArrowLeft' && this.state.key !== 'right'){
-      this.setState({
-        key: 'left'
-      })
-    }
+    let dir = dirVibo(key, this.state.key)
 
-    if(key === 'ArrowUp' && this.state.key !== 'down'){
-      this.setState({
-        key: 'up'
-      })
-    }
-
-    if(key === 'ArrowRight' && this.state.key !== 'left'){
-      this.setState({
-        key: 'right'
-      })
-    }
-
-    if(key === 'ArrowDown' && this.state.key !== 'up'){
-      this.setState({
-        key: 'down'
-      })
-    }
+    this.setState({
+      key: dir
+    })
   }
 
   render() {
     return(
-      <div id='game' onKeyDown={this.onKeyDownHandle} tabIndex="0" >
+      <div 
+        id='game' 
+        onKeyDown={this.onKeyDownHandle} 
+        tabIndex="0" 
+      >
         <button 
           hidden={this.state.key} 
           onClick={this.handleClick} 
         >
           Start
         </button>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(5)}
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-          {this.renderSquare(9)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(10)}
-          {this.renderSquare(11)}
-          {this.renderSquare(12)}
-          {this.renderSquare(13)}
-          {this.renderSquare(14)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(15)}
-          {this.renderSquare(16)}
-          {this.renderSquare(17)}
-          {this.renderSquare(18)}
-          {this.renderSquare(19)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(20)}
-          {this.renderSquare(21)}
-          {this.renderSquare(22)}
-          {this.renderSquare(23)}
-          {this.renderSquare(24)}
-        </div>
-        <h1>Score: {this.state.score}</h1>
+        <RenderTable 
+          coord={this.state.coord} 
+          food={this.state.food} 
+        />
+        <h1>
+          Score: {this.state.score}
+        </h1>
       </div>
     );
   }
