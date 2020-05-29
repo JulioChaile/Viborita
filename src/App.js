@@ -4,6 +4,7 @@ import {RenderTable} from './components/RenderTable.js'
 import {getRandomInt, movVibo, dirVibo} from './components/functions.js'
 
 let check = false
+let start = false
 
 class Game extends React.Component {
   constructor(props) {
@@ -23,6 +24,8 @@ class Game extends React.Component {
     const coord = [12, 11, 10]
     const key = 'right'
     let food
+
+    start = true
 
     document.getElementById('game').focus()
 
@@ -44,6 +47,8 @@ class Game extends React.Component {
   
   reset() {
     clearInterval(this.timerID)
+
+    start = false
     
     this.setState({
       coord: [],
@@ -130,7 +135,7 @@ class Game extends React.Component {
         tabIndex="0" 
       >
         <button 
-          hidden={this.state.food} 
+          hidden={start} 
           onClick={this.handleClick} 
         >
           Start
