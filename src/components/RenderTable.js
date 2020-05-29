@@ -1,6 +1,7 @@
 import React from 'react'
 import {RenderSquare} from './RenderSquare'
 
+//Renderiza cada cuadro del tablero
 export class RenderTable extends React.Component {
     render() {
         return(

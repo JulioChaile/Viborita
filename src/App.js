@@ -3,6 +3,8 @@ import './App.css';
 import {RenderTable} from './components/RenderTable.js'
 import {getRandomInt, movVibo, dirVibo} from './components/functions.js'
 
+let check = false
+
 class Game extends React.Component {
   constructor(props) {
     super(props);
@@ -57,18 +59,20 @@ class Game extends React.Component {
     let mov = coord[0]
     let score = this.state.score
 
-    if(
-      (mov + 1) % 5 === 0 && this.state.key === 'right' ||
-      mov % 5 === 0 && this.state.key === 'left' ||
-      mov -5 < 0 && this.state.key === 'up' ||
-      mov + 5 > 24 && this.state.key === 'down'
-    ){
-      alert('perdiste wacho')
-      this.reset()
-      return 
+    check = false
+
+    switch (true) {
+      case (mov + 1) % 5 === 0 && this.state.key === 'right':
+      case mov % 5 === 0 && this.state.key === 'left':
+      case mov -5 < 0 && this.state.key === 'up':
+      case mov + 5 > 24 && this.state.key === 'down':
+        alert('perdiste wacho')
+        this.reset()
+        return;
     }
 
     mov = movVibo(this.state.key, mov)
+    console.log({mov})
     
     if(mov !== food){
       coord.pop()
@@ -100,10 +104,17 @@ class Game extends React.Component {
   }
 
   onKeyDownHandle(event) {
+    if(check){return}
+
+    check = true
+
     if(!this.state.coord){return}
 
+    const keys = ['ArrowLeft', 'ArrowUp', 'ArrowRight', 'ArrowDown']
     const key = event.key
-    
+
+    if(!keys.includes(key)){return}
+
     let dir = dirVibo(key, this.state.key)
 
     this.setState({
@@ -119,12 +130,12 @@ class Game extends React.Component {
         tabIndex="0" 
       >
         <button 
-          hidden={this.state.key} 
+          hidden={this.state.food} 
           onClick={this.handleClick} 
         >
           Start
         </button>
-        <RenderTable 
+        <RenderTable //Renderiza el tablero y lo que muestra dentro
           coord={this.state.coord} 
           food={this.state.food} 
         />

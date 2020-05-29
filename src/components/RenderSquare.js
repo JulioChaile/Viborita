@@ -1,6 +1,7 @@
 import React from 'react'
-import { render } from '@testing-library/react'
 
+//Renderiza un cuadro del tablero y decide si debe mostrar algo o no
+//Se le debe hacer llegar las coordenadas de la serpiente y de la comida
 export class RenderSquare extends React.Component {
     render() {
         let vib = ''
