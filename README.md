@@ -17,4 +17,4 @@ Para ejecutar localmente el proyecto siga las siguientes instrucciones:
 Abra [http://localhost:3000](http://localhost:3000) para verlo en el navegador
 
 ## Vista previa
-![](/preview.jpg)
+![](/preview.png)
