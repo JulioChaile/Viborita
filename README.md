@@ -15,3 +15,6 @@ Para ejecutar localmente el proyecto siga las siguientes instrucciones:
 - Ejecutar ```npm start```
 
 Abra [http://localhost:3000](http://localhost:3000) para verlo en el navegador
+
+## Vista previa
+![](/preview.jpg)
