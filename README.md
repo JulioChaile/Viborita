@@ -18,3 +18,4 @@ Abra [http://localhost:3000](http://localhost:3000) para verlo en el navegador
 
 ## Vista previa
 ![](/preview.png)
+![](/preview2.png)
