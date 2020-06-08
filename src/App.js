@@ -2,9 +2,13 @@ import React from 'react';
 import './App.css';
 import {RenderTable} from './components/RenderTable.js'
 import {getRandomInt, movVibo, dirVibo} from './components/functions.js'
+import {Score} from './components/Score.js'
 
 let check = false
 let start = false
+let name = ''
+let finalScore = ''
+let checkEnd = false
 
 class Game extends React.Component {
   constructor(props) {
@@ -18,6 +22,10 @@ class Game extends React.Component {
     this.onKeyDownHandle = this.onKeyDownHandle.bind(this)
     this.handleClick = this.handleClick.bind(this)
     this.reset = this.reset.bind(this)
+  }
+
+  componentDidMount() {
+    document.getElementById('start').focus()
   }
 
   handleClick() {
@@ -49,6 +57,14 @@ class Game extends React.Component {
     clearInterval(this.timerID)
 
     start = false
+
+    checkEnd = true
+    name = prompt('Game Over', 'Ingrese su nombre')
+    finalScore = this.state.score
+
+    this.forceUpdate()
+
+    checkEnd = false
     
     this.setState({
       coord: [],
@@ -71,13 +87,11 @@ class Game extends React.Component {
       case mov % 5 === 0 && this.state.key === 'left':
       case mov -5 < 0 && this.state.key === 'up':
       case mov + 5 > 24 && this.state.key === 'down':
-        alert('perdiste wacho')
         this.reset()
         return;
     }
 
     mov = movVibo(this.state.key, mov)
-    console.log({mov})
     
     if(mov !== food){
       coord.pop()
@@ -87,7 +101,6 @@ class Game extends React.Component {
     }
 
     if(coord.includes(mov)) {
-      alert('perdiste wacho')
       this.reset()
       return
     }
@@ -132,11 +145,16 @@ class Game extends React.Component {
       <div 
         id='game' 
         onKeyDown={this.onKeyDownHandle} 
-        tabIndex="0" 
+        tabIndex="0"
       >
         <button 
           hidden={start} 
           onClick={this.handleClick} 
+          style={{
+            color: 'blue',
+            fontSize: 50
+          }}
+          id='start'
         >
           Start
         </button>
@@ -144,9 +162,19 @@ class Game extends React.Component {
           coord={this.state.coord} 
           food={this.state.food} 
         />
-        <h1>
+        <h1 
+          style={{
+            color: 'red',
+            fontSize: 50
+          }}
+        >
           Score: {this.state.score}
         </h1>
+        <Score 
+          name={name} 
+          finalScore={finalScore}
+          check={checkEnd}
+        />
       </div>
     );
   }
